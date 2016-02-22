@@ -46,7 +46,11 @@ public class Elevator_Movement : MonoBehaviour {
     }
 
     void OnMouseDown() {
-        if (Time.timeScale != 0) {
+        transition();
+    }
+
+    public void transition() {
+        if (!transitioning && Time.timeScale != 0) {
             transitioning = true;
             startTime = Time.time;
             journeyLength = Mathf.Abs(start.y - target.y);
