@@ -116,6 +116,11 @@ public class player : MonoBehaviour {
 
   }
 
+  void Death(){
+     //Death animations?
+     Destroy(this.gameObject);
+  }
+
   void Landing(){
 
     jump_frame = 0; // reset frames for animation
@@ -160,11 +165,22 @@ public class player : MonoBehaviour {
 
     // switch direction except if hitting jump block
     else if(other.tag != "jump_ground"){
+      if (other.tag == "normal_spike"){
+        Death();
+      }
+      else if (other.tag == "blue_spike" && this.name == "blue_player"){
+        Death();
+      }
+
+      else if (other.tag == "red_spike" && this.name == "red_player"){
+        Death();
+      }
       Toggle();
     }
+
   }
 
-  void OnCollisionExit(Collision coll){
+    void OnCollisionExit(Collision coll){
     GameObject other = coll.gameObject;
 
     // leaving ground from jump
