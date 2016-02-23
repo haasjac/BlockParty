@@ -33,7 +33,6 @@ public class controller : MonoBehaviour {
 		}
 	}
 
-
 	public void setTimescale(float t) {
     Time.timeScale = t;
   }
@@ -51,8 +50,5 @@ public class controller : MonoBehaviour {
     last_button.image.color = default_color;
     last_button = b;
   }
-
-
-
 
 }
