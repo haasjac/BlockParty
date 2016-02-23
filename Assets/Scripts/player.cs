@@ -14,11 +14,10 @@ public class player : MonoBehaviour {
   // jump
   public float thrust;
   public int jump_triggers;
-  public int jump_frame;
 
   // states
   public bool initial_fall;
-  public bool grounded;
+  public int grounded;
 
   // sprites
   public Sprite[] sprites;
@@ -30,10 +29,11 @@ public class player : MonoBehaviour {
 	void Start(){
 
     // set initial variables for both players
-    thrust = 300f;
-    jump_triggers = 0;
-    jump_frame = 0;
     initial_fall = true;
+    grounded = 0;
+    jump_triggers = 0;
+    speed = 2f;
+    thrust = 300f;
 
     // grab components
     sprite_renderer = gameObject.GetComponent<SpriteRenderer>();
@@ -42,17 +42,15 @@ public class player : MonoBehaviour {
     // set variables specific to red (currently the speed, but with the option to differentiate)
     if(this.name == "red_player"){
       sprites = Resources.LoadAll<Sprite>("red_monster");
-      speed = 2f;
-      direction = 1;
       sprite_renderer.flipX = true;
+      direction = 1;
     }
 
     // set variables specific to blue (currently the speed, but with the option to differentiate)
     else{
       sprites = Resources.LoadAll<Sprite>("blue_monster");
-      speed = 2f;
-      direction = -1;
       sprite_renderer.flipX = false;
+      direction = -1;
     }
 
     sprite_renderer.sprite = sprites[1];
@@ -77,13 +75,13 @@ public class player : MonoBehaviour {
   void Movement(){
 
     // delcare vairables
-    float jump_speed = 1.25f;
+    float jump_speed = 1.5f;
     float modifications = 1f;
     
     // adjust speed if in the air, and apply jump animation
-    if(!grounded){
+    if(grounded == 0){
       modifications = jump_speed / speed;
-      JumpAnimation(17, 25);
+      JumpAnimation();
     }
     
     // apply movement
@@ -117,38 +115,38 @@ public class player : MonoBehaviour {
   }
 
   void Death(){
-     //Death animations?
+
+     // TODO: death animations
      Destroy(this.gameObject);
+
   }
 
   void Landing(){
 
-    jump_frame = 0; // reset frames for animation
-    grounded = true; // set position as grounded
+    grounded += 1; // set position as grounded
     sprite_renderer.sprite = sprites[0]; // set sprite back to normal
     initial_fall = false; // sets initial_fall false forever
 
   }
 
-  void JumpAnimation(int shift_1, int shift_2){
+  void JumpAnimation(){
+
+    float peak = 0.75f;
     
-    // before peak
-    if(jump_frame >= 0 && jump_frame < shift_1){
+    // rising
+    if(body.velocity.y > peak){
       sprite_renderer.sprite = sprites[2];
     }
     
     // peak
-    else if(jump_frame >= shift_1 && jump_frame < shift_2){
+    else if(body.velocity.y <= peak && body.velocity.y >= -peak){
       sprite_renderer.sprite = sprites[0];
     }
     
-    // after peak
+    // falling
     else{
       sprite_renderer.sprite = sprites[1];
     }
-    
-    // increment jump_frame
-    jump_frame += 1;
 
   }
 
@@ -165,17 +163,17 @@ public class player : MonoBehaviour {
 
     // switch direction except if hitting jump block
     else if(other.tag != "jump_ground"){
-      if (other.tag == "normal_spike"){
-        Death();
-      }
-      else if (other.tag == "blue_spike" && this.name == "blue_player"){
+
+      // if spike, kill player
+      if(other.tag == "normal_spike" || other.tag == "blue_spike" || other.tag == "red_spike" ){
         Death();
       }
 
-      else if (other.tag == "red_spike" && this.name == "red_player"){
-        Death();
+      // swap direction
+      else{
+        Toggle();
       }
-      Toggle();
+      
     }
 
   }
@@ -185,7 +183,7 @@ public class player : MonoBehaviour {
 
     // leaving ground from jump
     if(other.tag == "ground"){
-      grounded = false;
+      grounded -= 1;
     }
   }
 
