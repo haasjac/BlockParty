@@ -19,7 +19,6 @@ public class Switch_Behaviour : MonoBehaviour {
 	}
 
     void OnTriggerEnter(Collider coll) {
-        print(coll.gameObject.name);
         if (coll.gameObject.tag == "Player") {
             ue.Invoke();
         }
