@@ -17,6 +17,7 @@ public class player : MonoBehaviour {
 
   // states
   public bool initial_fall;
+  public bool pause;
   public int grounded;
 
   // sprites
@@ -30,6 +31,7 @@ public class player : MonoBehaviour {
 
     // set initial variables for both players
     initial_fall = true;
+    pause = false;
     grounded = 0;
     jump_triggers = 0;
     speed = 2f;
@@ -53,8 +55,7 @@ public class player : MonoBehaviour {
       direction = -1;
     }
 
-    sprite_renderer.sprite = sprites[1];
-
+    sprite_renderer.sprite = sprites[0];
 	}
 
   // ==[update]=================================================================
@@ -62,9 +63,14 @@ public class player : MonoBehaviour {
 
   void FixedUpdate(){
 
-    // don't apply horizontal movement to the initial fall
-    if(!initial_fall){
-      Movement();
+    if(!pause){
+      // don't apply horizontal movement to the initial fall
+      if(!initial_fall){
+        Movement();
+      }
+      else{
+        JumpAnimation();
+      }
     }
 
   }
@@ -111,22 +117,19 @@ public class player : MonoBehaviour {
     if(jump_triggers <= 0){
       jump_triggers = 0;
     }
-
   }
 
   void Death(){
 
      // TODO: death animations
-     Destroy(this.gameObject);
+     gameObject.SetActive(false);
 
   }
 
   void Landing(){
-
     grounded += 1; // set position as grounded
     sprite_renderer.sprite = sprites[0]; // set sprite back to normal
     initial_fall = false; // sets initial_fall false forever
-
   }
 
   void JumpAnimation(){
@@ -147,6 +150,17 @@ public class player : MonoBehaviour {
     else{
       sprite_renderer.sprite = sprites[1];
     }
+  }
+
+  public void Goal(){
+    
+    // stop movement
+    pause = true;
+
+    // make sprite slightly transparent
+    Color sprite_color = sprite_renderer.color;
+    sprite_color.a = 0.8f;
+    sprite_renderer.color = sprite_color;
 
   }
 
@@ -161,50 +175,40 @@ public class player : MonoBehaviour {
       Landing();
     }
 
-    // switch direction except if hitting jump block
-    else if(other.tag != "jump_ground"){
+    // switch direction
+    else{
 
       // if spike, kill player
-      if(other.tag == "normal_spike" || other.tag == "blue_spike" || other.tag == "red_spike" ){
+      if(other.tag == "spike" ){
         Death();
       }
 
       // swap direction
-      else{
+      else if(other.tag != "button"){
         Toggle();
       }
-      
     }
-
   }
 
-    void OnCollisionExit(Collision coll){
-    GameObject other = coll.gameObject;
-
+  void OnCollisionExit(Collision coll){
     // leaving ground from jump
-    if(other.tag == "ground"){
+    if(coll.gameObject.tag == "ground"){
       grounded -= 1;
     }
   }
 
   void OnTriggerEnter(Collider coll){
-    GameObject other = coll.gameObject;
-
     // hitting a jump trigger pane, increment jump_trigger count
-    if(other.tag == "jump"){
+    if(coll.gameObject.tag == "jump"){
       Jump(1);
     }
-
   }
 
   void OnTriggerExit(Collider coll){
-    GameObject other = coll.gameObject;
-
     // leaving a jump trigger pane, decrement jump_trigger count
-    if(other.tag == "jump"){
+    if(coll.gameObject.tag == "jump"){
       Jump(-1);
     }
-
   }
 
 }

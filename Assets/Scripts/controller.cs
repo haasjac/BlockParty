@@ -4,18 +4,24 @@ using UnityEngine.SceneManagement;
 
 public class controller : MonoBehaviour {
 
-	// Use this for initialization
+	// ==[start & update]=========================================================
+  // ===========================================================================
+
 	void Start(){
 		Time.timeScale = 0;
 	}
 	
-	// Update is called once per frame
-	void Update () {
+	void Update(){
+
+		// restart
 		if(Input.GetKeyDown(KeyCode.Escape)) {
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 		}
+
+		// start
 		if(Input.GetKeyDown(KeyCode.Return)) {
 			Time.timeScale = 1;
 		}
+
 	}
 }

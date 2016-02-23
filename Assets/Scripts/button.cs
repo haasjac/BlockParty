@@ -4,25 +4,44 @@ using UnityEngine.Events;
 
 public class button : MonoBehaviour {
 
+	// ==[members]================================================================
+  // ===========================================================================
+
+	// target objects and functions
+	public GameObject[] targets;
 	public UnityEvent ue;
 
-	// Use this for initialization
-	void Start () {
-		if (ue == null) {
+	// ==[start]==================================================================
+  // ===========================================================================
+
+	void Start(){
+		// null handler
+		if(ue == null) {
 			ue = new UnityEvent();
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	// ==[triggers]===============================================================
+  // ===========================================================================
+
+	void OnTriggerEnter(Collider coll){
+
+		// emulate button being pressed
+		gameObject.GetComponent<Renderer>().enabled = false;
+
+		// run list of target functions (elevator)
+		ue.Invoke();
+
+		// toggle set of targets (walls, bridges, spikes, buttons)
+		for(int i = 0; i < targets.Length; ++i){
+			GameObject target = targets[i];
+			target.SetActive(!target.activeInHierarchy);
+		}
 	}
 
-	void OnTriggerEnter(Collider coll) {
-		print(coll.gameObject.name);
-		if (coll.gameObject.tag == "Player") {
-			ue.Invoke();
-		}
+	void OnTriggerExit(Collider coll){
+		// emulate button being unpressed
+		gameObject.GetComponent<Renderer>().enabled = true;
 	}
 	
 }

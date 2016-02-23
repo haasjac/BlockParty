@@ -3,38 +3,76 @@ using System.Collections;
 
 public class elevator : MonoBehaviour {
 
-	public bool up = true;
-	public float distance = 2f;
-	public float speed = 0.1f;
+	// ==[members]================================================================
+  // ===========================================================================
 
+	// parameters
+	public float distance = 1.8f;
+	public float speed = 2f;
+	public bool up = true;
+
+	// movement information
 	Vector3 start;
 	Vector3 target;
 	float startTime;
 	float journeyLength;
 	bool transitioning;
 
+	// ==[start]==================================================================
+  // ===========================================================================
 
-	// Use this for initialization
 	void Start(){
+
+		// initialize variables
 		transitioning = false;
 		start = transform.position;
-		if (up) {
+
+		// set target position
+		if(up){
 			target = start + distance * Vector3.up;
-		} else {
+		}
+		else{
 			target = start + distance * Vector3.down;
 		}
 		
 	}
-	
-	// Update is called once per frame
-	void Update(){
 
+	// ==[update]=================================================================
+  // ===========================================================================
+	
+	void Update(){
+		Move();
+	}
+
+	// ==[actions]================================================================
+  // ===========================================================================
+
+	public void Transition(){
+
+		// sets movement variables
+		if(!transitioning && Time.timeScale != 0){
+			transitioning = true;
+			startTime = Time.time;
+			journeyLength = Mathf.Abs(start.y - target.y);
+		}
+
+	}
+
+	void Move(){
+
+		// only move if in transition state
 		if(transitioning){
+
+			// initialize movement variables
 			Vector3 pos = transform.position;
 			float distCovered = (Time.time - startTime) * speed;
 			float fracJourney = distCovered / journeyLength;
+
+			// lerp position
 			pos.y = Mathf.Lerp(start.y, target.y, fracJourney);
 			transform.position = pos;
+
+			// check if target has been reached
 			if(pos == target){
 				transitioning = false;
 				pos = start;
@@ -45,15 +83,13 @@ public class elevator : MonoBehaviour {
 
 	}
 
-	void OnMouseDown() {
-		transition();
+	// ==[events]=================================================================
+  // ===========================================================================
+	
+	void OnMouseDown(){
+		Transition();
 	}
 
-	public void transition() {
-		if (!transitioning && Time.timeScale != 0) {
-			transitioning = true;
-			startTime = Time.time;
-			journeyLength = Mathf.Abs(start.y - target.y);
-		}
-	}
+
+
 }
