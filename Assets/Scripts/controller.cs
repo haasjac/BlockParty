@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class controller : MonoBehaviour {
 
-	public Button pause_button;
+  public Button pause_button;
   public Button last_button;
   public Color green;
   public Color red;
@@ -26,14 +26,9 @@ public class controller : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.Escape)) {
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 		}
-
-		// start
-		if(Input.GetKeyDown(KeyCode.Return)) {
-			Time.timeScale = 1;
-		}
 	}
 
-	public void setTimescale(float t) {
+  public void setTimescale(float t) {
     Time.timeScale = t;
   }
 
