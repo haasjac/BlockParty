@@ -8,8 +8,10 @@ public class player : MonoBehaviour {
 
   // movement
   Rigidbody body;
-  public int direction;
+    public int start_direction = 1;
+  int direction;
   public float speed;
+    Vector3 start_pos;
   
   // jump
   public float thrust;
@@ -36,6 +38,7 @@ public class player : MonoBehaviour {
     jump_triggers = 0;
     speed = 2f;
     thrust = 300f;
+        start_pos = transform.position;
 
     // grab components
     sprite_renderer = gameObject.GetComponent<SpriteRenderer>();
@@ -44,16 +47,23 @@ public class player : MonoBehaviour {
     // set variables specific to red (currently the speed, but with the option to differentiate)
     if(this.name == "red_player"){
       sprites = Resources.LoadAll<Sprite>("red_monster");
-      sprite_renderer.flipX = true;
-      direction = 1;
+      //sprite_renderer.flipX = true;
+      //direction = 1;
     }
 
     // set variables specific to blue (currently the speed, but with the option to differentiate)
     else{
       sprites = Resources.LoadAll<Sprite>("blue_monster");
-      sprite_renderer.flipX = false;
-      direction = -1;
+      //sprite_renderer.flipX = false;
+      //direction = -1;
     }
+
+        direction = start_direction;
+        if (direction == 1) {
+            sprite_renderer.flipX = true;
+        } else {
+            sprite_renderer.flipX = false;
+        }
 
     sprite_renderer.sprite = sprites[0];
 	}
@@ -121,10 +131,16 @@ public class player : MonoBehaviour {
 
   void Death(){
 
-     // TODO: death animations
-     gameObject.SetActive(false);
-
-  }
+        // TODO: death animations
+        //gameObject.SetActive(false);
+        transform.position = start_pos;
+        direction = start_direction;
+        if (direction == 1) {
+            sprite_renderer.flipX = true;
+        } else {
+            sprite_renderer.flipX = false;
+        }
+    }
 
   void Landing(){
     grounded += 1; // set position as grounded
