@@ -73,13 +73,17 @@ public class wall : MonoBehaviour {
   void OnMouseDown(){
 
     // checks if red_player is above toggle
-    if(check_red && DoesOverlap(red_player)){
-      return;
+    if (red_player != null){
+        if (check_red && DoesOverlap(red_player)){
+            return;
+        }
     }
 
-    // checks if blue_player is above toggle
-    if(check_blue && DoesOverlap(blue_player)){
-      return;
+        // checks if blue_player is above toggle
+    if (blue_player != null){
+        if (check_blue && DoesOverlap(blue_player)){
+            return;
+        }
     }
 
     // toggle target wall based on click
