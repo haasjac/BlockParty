@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class player : MonoBehaviour {
 
@@ -8,10 +9,10 @@ public class player : MonoBehaviour {
 
   // movement
   Rigidbody body;
-    public int start_direction = 1;
+  public int start_direction = 1;
   int direction;
   public float speed;
-    Vector3 start_pos;
+  Vector3 start_pos;
   
   // jump
   public float thrust;
@@ -26,6 +27,10 @@ public class player : MonoBehaviour {
   public Sprite[] sprites;
   SpriteRenderer sprite_renderer;
 
+  // items
+  public GameObject item_hold;
+  public List<GameObject> stars = new List<GameObject>();
+
   // ==[start]==================================================================
   // ===========================================================================
 
@@ -38,7 +43,7 @@ public class player : MonoBehaviour {
     jump_triggers = 0;
     speed = 2f;
     thrust = 300f;
-        start_pos = transform.position;
+    start_pos = transform.position;
 
     // grab components
     sprite_renderer = gameObject.GetComponent<SpriteRenderer>();
@@ -47,25 +52,23 @@ public class player : MonoBehaviour {
     // set variables specific to red (currently the speed, but with the option to differentiate)
     if(this.name == "red_player"){
       sprites = Resources.LoadAll<Sprite>("red_monster");
-      //sprite_renderer.flipX = true;
-      //direction = 1;
     }
 
     // set variables specific to blue (currently the speed, but with the option to differentiate)
     else{
       sprites = Resources.LoadAll<Sprite>("blue_monster");
-      //sprite_renderer.flipX = false;
-      //direction = -1;
     }
 
-        direction = start_direction;
-        if (direction == 1) {
-            sprite_renderer.flipX = true;
-        } else {
-            sprite_renderer.flipX = false;
-        }
+    direction = start_direction;
+    if(direction == 1){
+        sprite_renderer.flipX = true;
+    }
+    else{
+      sprite_renderer.flipX = false;
+    }
 
     sprite_renderer.sprite = sprites[0];
+    item_hold = null;
 	}
 
   // ==[update]=================================================================
@@ -131,16 +134,17 @@ public class player : MonoBehaviour {
 
   void Death(){
 
-        // TODO: death animations
-        //gameObject.SetActive(false);
-        transform.position = start_pos;
-        direction = start_direction;
-        if (direction == 1) {
-            sprite_renderer.flipX = true;
-        } else {
-            sprite_renderer.flipX = false;
-        }
+    // TODO: death animations
+
+    transform.position = start_pos;
+    direction = start_direction;
+    if(direction == 1){
+      sprite_renderer.flipX = true;
     }
+    else{
+      sprite_renderer.flipX = false;
+    }
+  }
 
   void Landing(){
     grounded += 1; // set position as grounded
@@ -180,6 +184,20 @@ public class player : MonoBehaviour {
 
   }
 
+  void PickUpItem(GameObject item){
+
+    item.SetActive(false);
+
+    if(item.tag == "star"){
+      stars.Add(item);
+    }
+    else{
+      item_hold.SetActive(true);
+      item_hold = item;
+    }
+
+  }
+
   // ==[collisions & triggers]==================================================
   // ===========================================================================
 
@@ -195,7 +213,7 @@ public class player : MonoBehaviour {
     else{
 
       // if spike, kill player
-      if(other.tag == "spike" ){
+      if(other.tag == "spike" || other.tag == ""){
         Death();
       }
 
@@ -214,10 +232,19 @@ public class player : MonoBehaviour {
   }
 
   void OnTriggerEnter(Collider coll){
+    GameObject other = coll.gameObject;
+
     // hitting a jump trigger pane, increment jump_trigger count
-    if(coll.gameObject.tag == "jump"){
+    if(other.tag == "jump"){
       Jump(1);
     }
+    else{
+      PickUpItem(other);
+    }
+
+    
+
+
   }
 
   void OnTriggerExit(Collider coll){
