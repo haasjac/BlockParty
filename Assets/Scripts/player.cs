@@ -309,7 +309,7 @@ public class player : MonoBehaviour {
       if(other.tag == "jump"){
         Jump(1);
       }
-      else{
+      else if(other.tag != "teleporter"){
         PickUpItem(other);
       }
     }
