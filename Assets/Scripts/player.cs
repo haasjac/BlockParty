@@ -22,6 +22,7 @@ public class player : MonoBehaviour {
   public bool initial_fall;
   public bool pause;
   public int grounded;
+  public bool enemy;
 
   // sprites
   public Sprite[] sprites;
@@ -47,22 +48,30 @@ public class player : MonoBehaviour {
     speed = 2f;
     thrust = 300f;
     start_pos = transform.position;
+    enemy = false;
 
     // grab components
     sprite_renderer = gameObject.GetComponent<SpriteRenderer>();
     body = gameObject.GetComponent<Rigidbody>();
-    item_display = gameObject.gameObject.transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>();
 
     // 
 
     // set variables specific to red (currently the speed, but with the option to differentiate)
     if(this.name == "red_player"){
       sprites = Resources.LoadAll<Sprite>("red_monster");
+      item_display = gameObject.gameObject.transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>();
     }
 
     // set variables specific to blue (currently the speed, but with the option to differentiate)
-    else{
+    else if(this.name == "blue_player"){
       sprites = Resources.LoadAll<Sprite>("blue_monster");
+      item_display = gameObject.gameObject.transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>();
+    }
+
+    else{
+      sprites = Resources.LoadAll<Sprite>("enemy_monster");
+      enemy = true;
+      item_display = null;
     }
 
     direction = start_direction;
@@ -76,6 +85,7 @@ public class player : MonoBehaviour {
     sprite_renderer.sprite = sprites[0];
     item_hold = null;
 	}
+
 
   // ==[update]=================================================================
   // ===========================================================================
@@ -91,6 +101,16 @@ public class player : MonoBehaviour {
         JumpAnimation();
       }
     }
+
+    if(!enemy){
+      if(item_hold_type != Item.none){
+        item_display.sprite = item_hold.GetComponent<SpriteRenderer>().sprite;
+      }
+      else{
+        item_display.sprite = null;
+      }
+    }
+      
   }
 
   // ==[actions]================================================================
@@ -140,6 +160,7 @@ public class player : MonoBehaviour {
 
     // TODO: death animations
 
+    initial_fall = true;
     transform.position = start_pos;
     direction = start_direction;
     if(direction == 1){
@@ -198,7 +219,6 @@ public class player : MonoBehaviour {
 
       item.SetActive(false);
       item_hold = item;
-      item_display.sprite = item.GetComponent<SpriteRenderer>().sprite;
 
       if(item.tag == "key"){
         item_hold_type = Item.key;
@@ -208,7 +228,13 @@ public class player : MonoBehaviour {
       }
 
     }
-      
+  }
+
+  void Unlock(GameObject lock_wall){
+    
+    lock_wall.SetActive(false);
+    item_hold_type = Item.none;
+
   }
 
   // ==[collisions & triggers]==================================================
@@ -226,13 +252,44 @@ public class player : MonoBehaviour {
     else{
 
       // if spike, kill player
-      if(other.tag == "spike" || other.tag == ""){
+      if(other.tag == "spike"){
         Death();
+      }
+
+      // run into enemy
+      else if(other.tag == "enemy"){
+
+        // kill enemy if player has sword
+        if(item_hold_type == Item.sword){
+          other.SetActive(false);
+          item_hold_type = Item.none;
+        }
+
+        // die
+        else{
+          Death();
+        }
+        
+      }
+
+      // unlock
+      else if(other.tag == "lock"){
+        if(item_hold_type == Item.key){
+          Unlock(other);
+        }
+        else{
+          Toggle();
+        }
       }
 
       // swap direction
       else if(other.tag != "button"){
-        Toggle();
+        if(!enemy){
+          Toggle();
+        }
+        else if(other.tag != "player"){
+          Toggle();
+        }
       }
     }
   }
@@ -247,20 +304,27 @@ public class player : MonoBehaviour {
   void OnTriggerEnter(Collider coll){
     GameObject other = coll.gameObject;
 
-    // hitting a jump trigger pane, increment jump_trigger count
-    if(other.tag == "jump"){
-      Jump(1);
+    if(!enemy){
+      // hitting a jump trigger pane, increment jump_trigger count
+      if(other.tag == "jump"){
+        Jump(1);
+      }
+      else{
+        PickUpItem(other);
+      }
     }
-    else{
-      PickUpItem(other);
-    }
+
   }
 
   void OnTriggerExit(Collider coll){
-    // leaving a jump trigger pane, decrement jump_trigger count
-    if(coll.gameObject.tag == "jump"){
-      Jump(-1);
+
+    if(!enemy){
+      // leaving a jump trigger pane, decrement jump_trigger count
+      if(coll.gameObject.tag == "jump"){
+        Jump(-1);
+      }
     }
+      
   }
 
 }
