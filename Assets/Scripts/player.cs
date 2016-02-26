@@ -54,8 +54,6 @@ public class player : MonoBehaviour {
     sprite_renderer = gameObject.GetComponent<SpriteRenderer>();
     body = gameObject.GetComponent<Rigidbody>();
 
-    // 
-
     // set variables specific to red (currently the speed, but with the option to differentiate)
     if(this.name == "red_player"){
       sprites = Resources.LoadAll<Sprite>("red_monster");
