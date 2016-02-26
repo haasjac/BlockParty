@@ -28,7 +28,10 @@ public class player : MonoBehaviour {
   SpriteRenderer sprite_renderer;
 
   // items
+  public enum Item {none, key, sword};
+  public Item item_hold_type;
   public GameObject item_hold;
+  public SpriteRenderer item_display;
   public List<GameObject> stars = new List<GameObject>();
 
   // ==[start]==================================================================
@@ -48,6 +51,9 @@ public class player : MonoBehaviour {
     // grab components
     sprite_renderer = gameObject.GetComponent<SpriteRenderer>();
     body = gameObject.GetComponent<Rigidbody>();
+    item_display = gameObject.gameObject.transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>();
+
+    // 
 
     // set variables specific to red (currently the speed, but with the option to differentiate)
     if(this.name == "red_player"){
@@ -85,7 +91,6 @@ public class player : MonoBehaviour {
         JumpAnimation();
       }
     }
-
   }
 
   // ==[actions]================================================================
@@ -112,7 +117,6 @@ public class player : MonoBehaviour {
     // switch direction of movement and sprite
     direction *= -1;
     sprite_renderer.flipX = !sprite_renderer.flipX;
-
   }
 
   void Jump(int count_delta){
@@ -181,21 +185,30 @@ public class player : MonoBehaviour {
     Color sprite_color = sprite_renderer.color;
     sprite_color.a = 0.8f;
     sprite_renderer.color = sprite_color;
-
   }
 
   void PickUpItem(GameObject item){
 
-    item.SetActive(false);
-
     if(item.tag == "star"){
+      item.SetActive(false);
       stars.Add(item);
     }
-    else{
-      item_hold.SetActive(true);
-      item_hold = item;
-    }
 
+    else if(item_hold == null){
+
+      item.SetActive(false);
+      item_hold = item;
+      item_display.sprite = item.GetComponent<SpriteRenderer>().sprite;
+
+      if(item.tag == "key"){
+        item_hold_type = Item.key;
+      }
+      else{
+        item_hold_type = Item.sword;
+      }
+
+    }
+      
   }
 
   // ==[collisions & triggers]==================================================
@@ -241,10 +254,6 @@ public class player : MonoBehaviour {
     else{
       PickUpItem(other);
     }
-
-    
-
-
   }
 
   void OnTriggerExit(Collider coll){
