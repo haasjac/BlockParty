@@ -15,7 +15,6 @@ public class level_select : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         sb.numberOfSteps = Mathf.CeilToInt(globals.S.NUM_LEVELS / 4.0f);
-        //print(globals.S.NUM_LEVELS / 4.0);
         if (sb.numberOfSteps < 2) {
             sb.gameObject.SetActive(false);
         }
@@ -61,22 +60,12 @@ public class level_select : MonoBehaviour {
 
     public void changeScreen() {
         int baseX = 0;
-        int delta = Mathf.RoundToInt(sb.value) * -1600;
+        int delta = Mathf.RoundToInt((sb.value * (sb.numberOfSteps - 1))) * -1600;
         foreach (GameObject go in pages) {
             Vector3 pos = go.GetComponent<RectTransform>().anchoredPosition;
             pos.x = baseX + delta;
             baseX += 1600;
             go.GetComponent<RectTransform>().anchoredPosition = pos;
         }
-    }
-
-    public void selectLevel(int n) {
-        print(n);
-        return;
-        /*if (n < SceneManager.sceneCountInBuildSettings) {
-            SceneManager.LoadScene("_Level_" + (n).ToString());
-        } else {
-            SceneManager.LoadScene("_MainM_-1");
-        }*/
     }
 }
