@@ -9,13 +9,16 @@ public class globals {
 
     public int NUM_LEVELS;
     public List<bool> levelLocked;
-    //public List<int> levelStars;
+    public List<int> levelStars;
 
     private globals() {
         NUM_LEVELS = SceneManager.sceneCountInBuildSettings - 2;
         levelLocked = new List<bool>(NUM_LEVELS + 1);
+        levelStars = new List<int>(NUM_LEVELS + 1);
         for (int i = 0; i <= NUM_LEVELS; i++)
             levelLocked.Add(false);
+        for (int i = 0; i <= NUM_LEVELS; i++)
+            levelStars.Add(0);
         load();
     }
 
@@ -37,6 +40,13 @@ public class globals {
             PlayerPrefs.SetInt(key, value);
         }
 
+        //levelStars
+        for (int i = 1; i <= NUM_LEVELS; i++) {
+            string key = "levelStars" + i.ToString();
+            int value = levelStars[i];
+            PlayerPrefs.SetInt(key, value);
+        }
+
         //save
         PlayerPrefs.Save();
     }
@@ -51,6 +61,15 @@ public class globals {
                 PlayerPrefs.SetInt(key, 1);
             }
             levelLocked[i] = (PlayerPrefs.GetInt(key) == 1 ? true : false);
+        }
+
+        //levelStars
+        for (int i = 1; i <= NUM_LEVELS; i++) {
+            string key = "levelStars" + i.ToString();
+            if (!PlayerPrefs.HasKey(key)) {
+                PlayerPrefs.SetInt(key, 0);
+            }
+            levelStars[i] = PlayerPrefs.GetInt(key);
         }
     }
 }

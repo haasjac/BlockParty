@@ -23,7 +23,7 @@ public class time_controller : MonoBehaviour {
     void Update(){
         // restart
         if(Input.GetKeyDown(KeyCode.Escape)) {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            reset();
         }
     }
 
@@ -45,6 +45,10 @@ public class time_controller : MonoBehaviour {
 
         last_button.image.color = default_color;
         last_button = b;
+    }
+
+    public void reset() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 }

@@ -27,9 +27,10 @@ public class level_select : MonoBehaviour {
             pages.Add(go);
             int j = 1;
             foreach (Button b in go.GetComponentsInChildren<Button>()) {
-                b.GetComponent<level_select_button>().level_num = (i*4) + j;
-                b.GetComponentInChildren<Text>().text = ((i * 4) + j).ToString();
-                if (((i * 4) + j) > globals.S.NUM_LEVELS) {
+                int n = ((i * 4) + j);
+                b.GetComponent<level_select_button>().level_num = n;
+                b.GetComponentInChildren<Text>().text = n.ToString() + "\n\nStars: " + globals.S.levelStars[n];
+                if (n > globals.S.NUM_LEVELS) {
                     b.gameObject.SetActive(false);
                 } else {
                     j++;

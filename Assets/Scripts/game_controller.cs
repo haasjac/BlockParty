@@ -32,6 +32,9 @@ public class game_controller : MonoBehaviour {
             if (!saved) {
                 if (scene_num + 1 <= globals.S.NUM_LEVELS)
                     globals.S.levelLocked[scene_num + 1] = false;
+                if (2 /*stars*/ > globals.S.levelStars[scene_num]) {
+                    globals.S.levelStars[scene_num] = 2 /*stars*/;
+                }
                 globals.S.save();
                 saved = true;
             }
