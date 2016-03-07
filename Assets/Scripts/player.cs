@@ -232,6 +232,7 @@ public class player : MonoBehaviour {
     
     lock_wall.SetActive(false);
     item_hold_type = Item.none;
+    item_hold = null;
 
   }
 
@@ -273,7 +274,18 @@ public class player : MonoBehaviour {
       // unlock
       else if(other.tag == "lock"){
         if(item_hold_type == Item.key){
-          Unlock(other);
+          if (item_hold.name[0] == 'r' && other.transform.parent.gameObject.name[0] == 'r'){
+             Unlock(other);
+          }
+          else if (item_hold.name[0] == 'b' && other.transform.parent.gameObject.name[0] == 'b'){
+             Unlock(other);
+          }
+          else if (item_hold.name[0] == 'n' && other.transform.parent.gameObject.name[0] == 'n'){
+             Unlock(other);
+          }
+          else {
+             Toggle();
+          }
         }
         else{
           Toggle();
