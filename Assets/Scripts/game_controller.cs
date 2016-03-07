@@ -50,4 +50,8 @@ public class game_controller : MonoBehaviour {
             SceneManager.LoadScene("_MainM_-1");
         }
     }
+
+    public void levelSelect() {
+        SceneManager.LoadScene("_Level_0");
+    }
 }
