@@ -33,7 +33,7 @@ public class player : MonoBehaviour {
   public Item item_hold_type;
   public GameObject item_hold;
   public SpriteRenderer item_display;
-  public List<GameObject> stars = new List<GameObject>();
+  public static List<GameObject> stars = new List<GameObject>();
 
   // ==[start]==================================================================
   // ===========================================================================
@@ -232,6 +232,7 @@ public class player : MonoBehaviour {
     
     lock_wall.SetActive(false);
     item_hold_type = Item.none;
+    item_hold = null;
 
   }
 
@@ -273,7 +274,18 @@ public class player : MonoBehaviour {
       // unlock
       else if(other.tag == "lock"){
         if(item_hold_type == Item.key){
-          Unlock(other);
+          if (item_hold.name[0] == 'r' && other.transform.parent.gameObject.name[0] == 'r'){
+             Unlock(other);
+          }
+          else if (item_hold.name[0] == 'b' && other.transform.parent.gameObject.name[0] == 'b'){
+             Unlock(other);
+          }
+          else if (item_hold.name[0] == 'n' && other.transform.parent.gameObject.name[0] == 'n'){
+             Unlock(other);
+          }
+          else {
+             Toggle();
+          }
         }
         else{
           Toggle();
@@ -307,7 +319,7 @@ public class player : MonoBehaviour {
       if(other.tag == "jump"){
         Jump(1);
       }
-      else if(other.tag != "teleporter"){
+      else if(other.tag != "teleporter" && other.tag != "button"){
         PickUpItem(other);
       }
     }

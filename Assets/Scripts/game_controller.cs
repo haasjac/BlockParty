@@ -13,6 +13,9 @@ public class game_controller : MonoBehaviour {
     bool win;
     bool saved;
 
+    public GameObject star1;
+    public GameObject star2;
+    public GameObject star3;
 
 	// Use this for initialization
 	void Start () {
@@ -40,6 +43,18 @@ public class game_controller : MonoBehaviour {
             }
             win_screen.SetActive(true);
         }
+        star1.SetActive(false);
+        star2.SetActive(false);
+        star3.SetActive(false);
+        if(player.stars.Count > 0){
+            star1.SetActive(true);
+            if(player.stars.Count > 1){
+                star2.SetActive(true);
+                if(player.stars.Count > 2){
+                    star3.SetActive(true);
+                }
+            }
+        }                
 	}
 
     public void playAgain() {

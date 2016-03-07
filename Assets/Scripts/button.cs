@@ -27,7 +27,7 @@ public class button : MonoBehaviour {
 	void OnTriggerEnter(Collider coll){
 
 		// emulate button being pressed
-		gameObject.GetComponent<Renderer>().enabled = false;
+		gameObject.SetActive(false);
 
 		// run list of target functions (elevator)
 		ue.Invoke();
