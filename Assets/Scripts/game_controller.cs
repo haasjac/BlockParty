@@ -47,7 +47,7 @@ public class game_controller : MonoBehaviour {
         if (scene_num + 1 <= globals.S.NUM_LEVELS) {
             SceneManager.LoadScene("_Level_" + (scene_num + 1).ToString());
         } else {
-            SceneManager.LoadScene("_MainM_0");
+            SceneManager.LoadScene("_MainM_-1");
         }
     }
 }

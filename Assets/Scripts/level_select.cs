@@ -7,12 +7,37 @@ using UnityEngine.SceneManagement;
 public class level_select : MonoBehaviour {
 
     public Scrollbar sb;
+    public GameObject page_prefab;
+    public GameObject Levels;
     public List<GameObject> pages;
     public List<Button> levels;
 
 	// Use this for initialization
 	void Start () {
-        sb.numberOfSteps = Mathf.CeilToInt(globals.S.NUM_LEVELS / 4);
+        sb.numberOfSteps = Mathf.CeilToInt(globals.S.NUM_LEVELS / 4.0f);
+        //print(globals.S.NUM_LEVELS / 4.0);
+        if (sb.numberOfSteps < 2) {
+            sb.gameObject.SetActive(false);
+        }
+        for (int i = 0; i < sb.numberOfSteps; i++) {
+            GameObject go = Instantiate<GameObject>(page_prefab);
+            go.transform.SetParent(Levels.transform, false);
+            Vector3 pos = Vector3.zero;
+            pos.x = i * 1600;
+            go.GetComponent<RectTransform>().anchoredPosition = pos;
+            pages.Add(go);
+            int j = 1;
+            foreach (Button b in go.GetComponentsInChildren<Button>()) {
+                b.GetComponent<level_select_button>().level_num = (i*4) + j;
+                b.GetComponentInChildren<Text>().text = ((i * 4) + j).ToString();
+                if (((i * 4) + j) > globals.S.NUM_LEVELS) {
+                    b.gameObject.SetActive(false);
+                } else {
+                    j++;
+                    levels.Add(b);
+                }
+            }
+        }
 	}
 	
 	// Update is called once per frame
@@ -46,10 +71,12 @@ public class level_select : MonoBehaviour {
     }
 
     public void selectLevel(int n) {
-        if (n < SceneManager.sceneCountInBuildSettings) {
+        print(n);
+        return;
+        /*if (n < SceneManager.sceneCountInBuildSettings) {
             SceneManager.LoadScene("_Level_" + (n).ToString());
         } else {
-            SceneManager.LoadScene("_MainM_0");
-        }
+            SceneManager.LoadScene("_MainM_-1");
+        }*/
     }
 }
