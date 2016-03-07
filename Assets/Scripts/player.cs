@@ -33,7 +33,7 @@ public class player : MonoBehaviour {
   public Item item_hold_type;
   public GameObject item_hold;
   public SpriteRenderer item_display;
-  public List<GameObject> stars = new List<GameObject>();
+  public static List<GameObject> stars = new List<GameObject>();
 
   // ==[start]==================================================================
   // ===========================================================================
@@ -319,7 +319,7 @@ public class player : MonoBehaviour {
       if(other.tag == "jump"){
         Jump(1);
       }
-      else if(other.tag != "teleporter"){
+      else if(other.tag != "teleporter" && other.tag != "button"){
         PickUpItem(other);
       }
     }
