@@ -33,7 +33,7 @@ public class player : MonoBehaviour {
   public Item item_hold_type;
   public GameObject item_hold;
   public SpriteRenderer item_display;
-  public static List<GameObject> stars = new List<GameObject>();
+  public static List<GameObject> stars;
 
   // ==[start]==================================================================
   // ===========================================================================
@@ -49,6 +49,8 @@ public class player : MonoBehaviour {
     thrust = 300f;
     start_pos = transform.position;
     enemy = false;
+
+    stars = new List<GameObject>();
 
     // grab components
     sprite_renderer = gameObject.GetComponent<SpriteRenderer>();
