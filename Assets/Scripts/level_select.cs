@@ -28,11 +28,11 @@ public class level_select : MonoBehaviour {
             int j = 1;
             foreach (Button b in go.GetComponentsInChildren<Button>()) {
                 int n = ((i * 4) + j);
-                b.GetComponent<level_select_button>().level_num = n;
-                b.GetComponentInChildren<Text>().text = n.ToString() + "\n\nStars: " + globals.S.levelStars[n];
                 if (n > globals.S.NUM_LEVELS) {
                     b.gameObject.SetActive(false);
-                } else {
+                } else { 
+                    b.GetComponent<level_select_button>().level_num = n;
+                    b.GetComponentInChildren<Text>().text = n.ToString() + "\n\nStars: " + globals.S.levelStars[n];
                     j++;
                     levels.Add(b);
                 }
@@ -51,11 +51,16 @@ public class level_select : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.U)) {
             for (int j = 2; j < globals.S.levelLocked.Count; j++)
                 globals.S.levelLocked[j] = false;
+            globals.S.save();
         }
 
         if (Input.GetKeyDown(KeyCode.L)) {
             for (int j = 2; j < globals.S.levelLocked.Count; j++)
                 globals.S.levelLocked[j] = true;
+            for (int j = 0; j < globals.S.levelStars.Count; j++) {
+                globals.S.levelStars[j] = 0;
+            }
+            globals.S.save();
         }
     }
 
