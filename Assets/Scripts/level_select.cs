@@ -51,11 +51,16 @@ public class level_select : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.U)) {
             for (int j = 2; j < globals.S.levelLocked.Count; j++)
                 globals.S.levelLocked[j] = false;
+            globals.S.save();
         }
 
         if (Input.GetKeyDown(KeyCode.L)) {
             for (int j = 2; j < globals.S.levelLocked.Count; j++)
                 globals.S.levelLocked[j] = true;
+            for (int j = 0; j < globals.S.levelStars.Count; j++) {
+                globals.S.levelStars[j] = 0;
+            }
+            globals.S.save();
         }
     }
 
