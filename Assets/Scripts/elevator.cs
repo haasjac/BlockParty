@@ -18,6 +18,9 @@ public class elevator : MonoBehaviour {
 	float journeyLength;
 	bool transitioning;
 
+	// destination
+	public GameObject destination;
+
 	// ==[start]==================================================================
   // ===========================================================================
 
@@ -26,6 +29,8 @@ public class elevator : MonoBehaviour {
 		// initialize variables
 		transitioning = false;
 		start = transform.position;
+		print(distance);
+		destination.transform.localPosition = new Vector3(0f, distance, 0f);
 
 		// set target position
 		if(up){
