@@ -32,7 +32,24 @@ public class level_select : MonoBehaviour {
                     b.gameObject.SetActive(false);
                 } else { 
                     b.GetComponent<level_select_button>().level_num = n;
-                    b.GetComponentInChildren<Text>().text = n.ToString() + "\n\nStars: " + globals.S.levelStars[n];
+                    b.GetComponentInChildren<Text>().text = n.ToString();
+                    if (globals.S.levelStars[n] == 3) {
+                        b.GetComponent<level_select_button>().star1.gameObject.SetActive(true);
+                        b.GetComponent<level_select_button>().star2.gameObject.SetActive(true);
+                        b.GetComponent<level_select_button>().star3.gameObject.SetActive(true);
+                    } else if (globals.S.levelStars[n] == 2) {
+                        b.GetComponent<level_select_button>().star1.gameObject.SetActive(true);
+                        b.GetComponent<level_select_button>().star2.gameObject.SetActive(true);
+                        b.GetComponent<level_select_button>().star3.gameObject.SetActive(false);
+                    } else if (globals.S.levelStars[n] == 1) {
+                        b.GetComponent<level_select_button>().star1.gameObject.SetActive(true);
+                        b.GetComponent<level_select_button>().star2.gameObject.SetActive(false);
+                        b.GetComponent<level_select_button>().star3.gameObject.SetActive(false);
+                    } else {
+                        b.GetComponent<level_select_button>().star1.gameObject.SetActive(false);
+                        b.GetComponent<level_select_button>().star2.gameObject.SetActive(false);
+                        b.GetComponent<level_select_button>().star3.gameObject.SetActive(false);
+                    }
                     j++;
                     levels.Add(b);
                 }

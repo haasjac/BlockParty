@@ -84,11 +84,11 @@ public class time_controller : MonoBehaviour {
         if (paused) {
             paused = false;
             pause_button.image.color = green;
-            pause_button.GetComponentInChildren<Text>().text = ">";
+            pause_button.GetComponentInChildren<Text>().text = "||";
         } else {
             paused = true;
             pause_button.image.color = red;
-            pause_button.GetComponentInChildren<Text>().text = "||";
+            pause_button.GetComponentInChildren<Text>().text = ">";
         }
     }
 

@@ -55,7 +55,7 @@ public class elevator : MonoBehaviour {
 	public void Transition(){
 
 		// sets movement variables
-		if(!transitioning && Time.timeScale != 0){
+		if(!transitioning){
 			transitioning = true;
 			startTime = Time.time;
 			journeyLength = Mathf.Abs(start.y - target.y);
