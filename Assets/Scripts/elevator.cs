@@ -29,7 +29,14 @@ public class elevator : MonoBehaviour {
 		// initialize variables
 		transitioning = false;
 		start = transform.position;
-		destination.transform.localPosition = new Vector3(0f, distance, 0f);
+        if (up)
+        {
+            destination.transform.localPosition = new Vector3(0f, distance, 0f);
+        }
+        else
+        {
+            destination.transform.localPosition = new Vector3(0f, -distance, 0f);
+        }
 
 		// set target position
 		if(up){
