@@ -7,9 +7,20 @@ public class main_menu : MonoBehaviour {
 	void Start () {
         Time.timeScale = 1;
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    static bool AudioBegin = false;
+    void Awake()
+    {
+        if (!AudioBegin)
+        {
+            this.GetComponent<AudioSource>().Play();
+            DontDestroyOnLoad(gameObject);
+            AudioBegin = true;
+        }
+    }
+
+    // Update is called once per frame
+    void Update () {
 	
 	}
 }
